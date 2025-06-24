@@ -1,0 +1,10 @@
+# Python
+api/__pycache__/
+api/.venv/
+
+# Node
+frontend/node_modules/
+frontend/build/
+
+# VSCode
+.vscode/
