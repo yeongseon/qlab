@@ -3,18 +3,28 @@ import React, { useState } from "react";
 const Quiz = () => {
   const [answer, setAnswer] = useState("");
   const [result, setResult] = useState<any>(null);
-  const baseUrl = process.env.REACT_APP_API_BASE_URL;
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-  const res = await fetch(`${baseUrl}/api/quiz_submit`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers: [answer] }),
-  });
-  const data = await res.json();
-  setResult(data);
-  };
+    try {
+      const res = await fetch("/api/quiz_submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers: [answer] }),
+      });
 
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setResult(data);
+      setError(null);
+    } catch (err: any) {
+      console.error("Error submitting quiz:", err);
+      setError("Failed to submit. Please try again.");
+    }
+  };
 
   return (
     <div>
@@ -25,6 +35,8 @@ const Quiz = () => {
       <button onClick={handleSubmit} disabled={!answer}>
         Submit Answer
       </button>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {result && (
         <div>
