@@ -1,3 +1,4 @@
+// src/pages/Quiz.tsx
 import React, { useState } from "react";
 
 const Quiz = () => {
